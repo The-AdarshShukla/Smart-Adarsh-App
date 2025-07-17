@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Smart Personal Assistant - All-in-One Utility App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css\dashboard.css">
+    <link rel="stylesheet" href="css/music.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/todo.css">
+    <!-- <link rel="stylesheet" href="css/calculator.css"> -->
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/weather.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <!-- <link rel="stylesheet" href="css/notes.css"> -->
+    <!-- <link rel="stylesheet" href="css/quiz.css"> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="theme-color" content="#4361ee">
+    <meta name="description"
+        content="All-in-One Personal Assistant with , To-Do, Calculator, Expense Tracker, Notes, and Quiz Game">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- App Header with Theme Toggle -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>Smart Assistant</h1>
+                <div class="header-actions">
+                    <div class="date-display" id="currentDateTime"></div>
+                    <button id="theme-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="global-progress">
+                <div id="progress-fill"></div>
+            </div>
+        </header>
+
+        <!-- Main Navigation with Scrollable Tabs -->
+        <nav class="tool-nav" id="main-nav">
+            <div class="nav-scroll-container">
+                <div class="nav-item active" data-tool="dashboard" role="tab" aria-selected="true"
+                    aria-controls="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-tool="security" role="tab" aria-selected="false" aria-controls="security">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security</span>
+                </div>
+                <div class="nav-item" data-tool="todo" role="tab" aria-selected="false" aria-controls="todo">
+                    <i class="fas fa-tasks"></i>
+                    <span>To-Do</span>
+                </div>
+                <div class="nav-item" data-tool="calculator" role="tab" aria-selected="false"
+                    aria-controls="calculator">
+                    <i class="fas fa-calculator"></i>
+                    <span>Calculator</span>
+                </div>
+                <div class="nav-item" data-tool="expenses" role="tab" aria-selected="false" aria-controls="expenses">
+                    <i class="fas fa-rupee-sign"></i>
+                    <span>Expenses</span>
+                </div>
+                <div class="nav-item" data-tool="notes" role="tab" aria-selected="false" aria-controls="notes">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Notes</span>
+                </div>
+                <div class="nav-item" data-tool="weather" role="tab" aria-selected="false" aria-controls="weather">
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>Weather</span>
+                </div>
+                <div class="nav-item" data-tool="quiz" role="tab" aria-selected="false" aria-controls="quiz">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Quiz</span>
+                </div>
+                <div class="nav-item" data-tool="music" role="tab" aria-controls="music" aria-selected="false">
+                    <i class="fas fa-music"></i>
+                    <span>Music</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="tool-container" id="main-content">
+            <!-- Dashboard Section -->
+            <section class="tool-content active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                <div class="dashboard-grid">
+                    <!-- Quick Stats Card -->
+                    <div class="dashboard-card stats-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="pending-tasks">0</div>
+                                <div class="stat-label">Pending Tasks</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="monthly-expense">₹0</div>
+                                <div class="stat-label">This Month</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="weekly-goals">0%</div>
+                                <div class="stat-label">Goals Progress</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Quote Card -->
+                    <div class="dashboard-card quote-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-quote-left"></i> Daily Quote</h3>
+                            <button id="refresh-quote"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                        <div class="card-body">
+                            <p id="daily-quote">Loading inspirational quote...</p>
+                            <p id="quote-author" class="quote-author"></p>
+                        </div>
+                    </div>
+
+                    <!-- Weather Info Card -->
+                    <div class="dashboard-card weather-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cloud-sun"></i> Weather Today</h3>
+                        </div>
+                        <div class="card-body" id="weather-info">
+                            <p id="weather-summary">Loading weather...</p>
+                            <p id="smart-suggestion" class="smart-suggestion"></p>
+                            <div class="weather-details-link">
+                                <a href="#" data-tool="weather">View Full Forecast <i
+                                        class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="dashboard-card actions-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="actions-grid">
+                                <button class="action-btn" data-tool="todo">
+                                    <i class="fas fa-plus"></i> Add Task
+                                </button>
+                                <button class="action-btn" data-tool="expenses">
+                                    <i class="fas fa-rupee-sign"></i> Add Expense
+                                </button>
+                                <button class="action-btn" data-tool="notes">
+                                    <i class="fas fa-edit"></i> New Note
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Tasks Card -->
+                    <div class="dashboard-card tasks-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clipboard-list"></i> Recent Tasks</h3>
+                            <a href="#" data-tool="todo">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="task-list" id="recent-tasks">
+                                <li class="task-item empty-state">No recent tasks</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recent Notes Card -->
+                    <div class="dashboard-card notes-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-sticky-note"></i> Recent Notes</h3>
+                            <a href="#" data-tool="notes">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="notes-grid" id="recent-notes">
+                                <div class="note-item empty-state">No recent notes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- To-Do Section -->
+            <!-- To-Do Section -->
+            <section class="tool-content" id="todo" role="tabpanel" aria-labelledby="todo-tab" hidden>
+                <div class="todo-container">
+                    <div class="todo-header">
+                        <h2><i class="fas fa-tasks"></i> Task Manager</h2>
+                        <div class="todo-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="active">Active</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                        </div>
+                    </div>
+
+                    <div class="todo-input-container">
+                        <form id="todo-form">
+                            <input type="text" id="todo-input" placeholder="Add a new task..." required>
+                            <button type="submit" id="add-todo">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="todo-list-container">
+                        <div class="todo-list-header">
+                            <h3>My Tasks</h3>
+                            <div class="task-count" id="task-count">0 tasks</div>
+                        </div>
+
+                        <ul class="todo-list" id="todo-list">
+                            <li class="todo-item empty-state">No tasks added yet</li>
+                        </ul>
+                    </div>
+
+                    <div class="todo-actions">
+                        <button class="action-btn" id="clear-completed">
+                            <i class="fas fa-trash"></i> Clear Completed
+                        </button>
+                        <button class="action-btn" id="save-tasks">
+                            <i class="fas fa-save"></i> Save Tasks
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Secure Vault Section -->
+            <!-- Secure Vault Section -->
+            <section class="tool-content" id="security" role="tabpanel" aria-labelledby="security-tab" hidden>
+                <div class="vault-container">
+                    <div class="vault-header">
+                        <h2><i class="fas fa-lock"></i> Secure Vault</h2>
+                        <div class="vault-filters">
+                            <select id="vault-filter">
+                                <option value="all">All Items</option>
+                                <option value="notes">Secure Notes</option>
+                                <option value="passwords">Passwords</option>
+                                <option value="files">Secure Files</option>
+                            </select>
+                            <button id="add-vault-item-btn" class="primary-btn">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="vault-stats">
+                        <div class="stat-card1">
+                            <div class="stat-value1" id="total-items">0</div>
+                            <div class="stat-label1">Total Items</div>
+                        </div>
+                        <div class="stat-card1">
+                            <div class="stat-value1" id="last-login">--</div>
+                            <div class="stat-label1">Last Login</div>
+                        </div>
+                        <div class="stat-card1">
+                            <div class="stat-value1" id="failed-attempts">0</div>
+                            <div class="stat-label1">Failed Attempts</div>
+                        </div>
+                    </div>
+
+                    <div class="vault-content">
+                        <div class="security-dashboard">
+                            <h3><i class="fas fa-shield-alt"></i> Security Dashboard</h3>
+                            <div class="dashboard-grid1">
+                                <div class="dashboard-item1">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Last Activity: <span id="last-activity">Just now</span></span>
+                                </div>
+                                <div class="dashboard-item1">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>This Device: <span id="current-device">This Phone</span></span>
+                                </div>
+                                <div class="dashboard-item1">
+                                    <i class="fas fa-history"></i>
+                                    <span>Access History: <span id="access-count">0</span> today</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vault-items-grid" id="vault-items-grid">
+                            <div class="empty-state">No items added yet</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Vault Item Modal -->
+                <div class="modal1" id="vault-item-modal">
+                    <div class="modal-content1">
+                        <div class="modal-header1">
+                            <h3>Add New Vault Item</h3>
+                            <button class="close-modal1">&times;</button>
+                        </div>
+                        <div class="modal-body1">
+                            <form id="vault-item-form">
+                                <div class="form-group1">
+                                    <label for="item-type">Item Type</label>
+                                    <select id="item-type">
+                                        <option value="note">Secure Note</option>
+                                        <option value="password">Password</option>
+                                        <option value="file">Secure File</option>
+                                    </select>
+                                </div>
+
+                                <!-- Note Fields (shown by default) -->
+                                <div id="note-fields">
+                                    <div class="form-group1">
+                                        <label for="note-title">Title*</label>
+                                        <input type="text" id="note-title" required>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="note-content">Content*</label>
+                                        <textarea id="note-content" rows="4" required></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Password Fields (hidden by default) -->
+                                <div id="password-fields" style="display:none;">
+                                    <div class="form-group1">
+                                        <label for="password-service">Service/Website*</label>
+                                        <input type="text" id="password-service" required>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="password-username">Username*</label>
+                                        <input type="text" id="password-username" required>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="password-value">Password*</label>
+                                        <div class="password-input-group">
+                                            <input type="password" id="password-value" required>
+                                            <button type="button" id="generate-password" class="small-btn">
+                                                <i class="fas fa-key"></i> Generate
+                                            </button>
+                                            <button type="button" id="toggle-password" class="small-btn">
+                                                <i class="fas fa-eye"></i> Show
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="password-url">Website URL</label>
+                                        <input type="url" id="password-url">
+                                    </div>
+                                </div>
+
+                                <!-- File Fields (hidden by default) -->
+                                <div id="file-fields" style="display:none;">
+                                    <div class="form-group1">
+                                        <label for="file-title">Title*</label>
+                                        <input type="text" id="file-title" required>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="file-upload">Select File*</label>
+                                        <input type="file" id="file-upload" required>
+                                    </div>
+
+                                    <div class="form-group1">
+                                        <label for="file-notes">Notes</label>
+                                        <textarea id="file-notes" rows="2"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group1">
+                                    <label for="item-tags">Tags (comma separated)</label>
+                                    <input type="text" id="item-tags">
+                                </div>
+
+                                <div class="form-actions1">
+                                    <button type="button" class="cancel-btn">Cancel</button>
+                                    <button type="submit" class="save-btn">Save Item</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Item Modal -->
+                <div class="modal1" id="view-item-modal">
+                    <div class="modal-content1">
+                        <div class="modal-header1">
+                            <h3 id="view-item-title">Item Details</h3>
+                            <button class="close-modal1">&times;</button>
+                        </div>
+                        <div class="modal-body1" id="view-item-content">
+                            <!-- Content will be dynamically inserted here -->
+                        </div>
+                        <div class="modal-footer1">
+                            <button id="edit-item-btn" class="action-btn">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button id="delete-item-btn" class="action-btn danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            <button id="copy-item-btn" class="action-btn">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings Modal -->
+                <div class="modal1" id="security-settings-modal">
+                    <div class="modal-content1">
+                        <div class="modal-header1">
+                            <h3>Security Settings</h3>
+                            <button class="close-modal1">&times;</button>
+                        </div>
+                        <div class="modal-body1">
+                            <div class="security-option">
+                                <h4><i class="fas fa-fingerprint"></i> Biometric Authentication</h4>
+                                <label class="switch">
+                                    <input type="checkbox" id="biometric-auth">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span id="biometric-status">Disabled</span>
+                            </div>
+
+                            <div class="security-option">
+                                <h4><i class="fas fa-clock"></i> Auto-lock After</h4>
+                                <select id="auto-lock-time">
+                                    <option value="0">Immediately</option>
+                                    <option value="1">1 Minute</option>
+                                    <option value="2" selected>2 Minutes</option>
+                                    <option value="5">5 Minutes</option>
+                                    <option value="10">10 Minutes</option>
+                                    <option value="30">30 Minutes</option>
+                                </select>
+                            </div>
+
+                            <div class="security-option">
+                                <h4><i class="fas fa-camera"></i> Intruder Alert</h4>
+                                <label class="switch">
+                                    <input type="checkbox" id="intruder-alert">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span id="intruder-status">Disabled</span>
+                                <p class="small-text">Takes photo after 3 failed attempts</p>
+                            </div>
+
+                            <div class="security-option">
+                                <h4><i class="fas fa-key"></i> Change Master PIN</h4>
+                                <button id="change-pin-btn" class="action-btn">
+                                    Set New PIN
+                                </button>
+                            </div>
+
+                            <div class="form-actions1">
+                                <button type="button" class="cancel-btn">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PIN Entry Modal -->
+                <div class="modal1" id="pin-modal">
+                    <div class="modal-content1">
+                        <div class="modal-header1">
+                            <h3 id="pin-modal-title">Enter PIN</h3>
+                            <button class="close-modal1">&times;</button>
+                        </div>
+                        <div class="modal-body1">
+                            <div class="pin-display" id="pin-display">____</div>
+                            <div class="pin-pad">
+                                <button class="pin-btn" data-value="1">1</button>
+                                <button class="pin-btn" data-value="2">2</button>
+                                <button class="pin-btn" data-value="3">3</button>
+                                <button class="pin-btn" data-value="4">4</button>
+                                <button class="pin-btn" data-value="5">5</button>
+                                <button class="pin-btn" data-value="6">6</button>
+                                <button class="pin-btn" data-value="7">7</button>
+                                <button class="pin-btn" data-value="8">8</button>
+                                <button class="pin-btn" data-value="9">9</button>
+                                <button class="pin-btn" data-value="0">0</button>
+                                <button class="pin-btn" id="pin-clear">
+                                    <i class="fas fa-backspace"></i>
+                                </button>
+                            </div>
+                            <p id="pin-error" class="error-message"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calculator Section -->
+            <!-- Calculator Section with Converters -->
+<section class="tool-content" id="calculator" role="tabpanel" aria-labelledby="calculator-tab">
+    <div class="tool-switcher">
+        <button class="tool-switch active" data-tool="calculator">Calculator</button>
+        <button class="tool-switch" data-tool="converter">Converters</button>
+    </div>
+
+    <!-- Calculator -->
+    <div class="calculator-container tool-panel" id="calc-panel">
+        <div class="calculator-display">
+            <div class="calculator-history" id="calc-history"></div>
+            <div class="calculator-current" id="calc-current">0</div>
+        </div>
+
+        <div class="calculator-buttons">
+            <button class="calc-btn function" data-value="AC">AC</button>
+            <button class="calc-btn function" data-value="+/-">+/-</button>
+            <button class="calc-btn function" data-value="%">%</button>
+            <button class="calc-btn operation" data-value="/">÷</button>
+
+            <button class="calc-btn number" data-value="7">7</button>
+            <button class="calc-btn number" data-value="8">8</button>
+            <button class="calc-btn number" data-value="9">9</button>
+            <button class="calc-btn operation" data-value="*">×</button>
+
+            <button class="calc-btn number" data-value="4">4</button>
+            <button class="calc-btn number" data-value="5">5</button>
+            <button class="calc-btn number" data-value="6">6</button>
+            <button class="calc-btn operation" data-value="-">-</button>
+
+            <button class="calc-btn number" data-value="1">1</button>
+            <button class="calc-btn number" data-value="2">2</button>
+            <button class="calc-btn number" data-value="3">3</button>
+            <button class="calc-btn operation" data-value="+">+</button>
+
+            <button class="calc-btn number zero" data-value="0">0</button>
+            <button class="calc-btn number" data-value=".">.</button>
+            <button class="calc-btn equals" data-value="=">=</button>
+        </div>
+    </div>
+
+    <!-- Converters -->
+    <div class="converter-container tool-panel" id="converter-panel" style="display:none;">
+        <div class="converter-tabs">
+            <button class="converter-tab active" data-type="length">Length</button>
+            <button class="converter-tab" data-type="volume">Volume</button>
+            <button class="converter-tab" data-type="weight">Weight</button>
+            <button class="converter-tab" data-type="temperature">Temperature</button>
+            <button class="converter-tab" data-type="area">Area</button>
+        </div>
+
+        <!-- Length Converter -->
+        <div class="converter-content active" data-type="length">
+            <div class="converter-input">
+                <input type="number" class="converter-value" placeholder="Enter value">
+                <select class="converter-unit">
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="cm">Centimeters (cm)</option>
+                    <option value="m">Meters (m)</option>
+                    <option value="km">Kilometers (km)</option>
+                    <option value="in">Inches (in)</option>
+                    <option value="ft">Feet (ft)</option>
+                    <option value="yd">Yards (yd)</option>
+                    <option value="mi">Miles (mi)</option>
+                </select>
+            </div>
+            <div class="converter-output">
+                <div class="converter-result">
+                    <span class="result-value">0</span>
+                    <span class="result-unit">cm</span>
+                </div>
+                <select class="converter-target">
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="cm" selected>Centimeters (cm)</option>
+                    <option value="m">Meters (m)</option>
+                    <option value="km">Kilometers (km)</option>
+                    <option value="in">Inches (in)</option>
+                    <option value="ft">Feet (ft)</option>
+                    <option value="yd">Yards (yd)</option>
+                    <option value="mi">Miles (mi)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Volume Converter -->
+        <div class="converter-content" data-type="volume">
+            <div class="converter-input">
+                <input type="number" class="converter-value" placeholder="Enter value">
+                <select class="converter-unit">
+                    <option value="ml">Milliliters (ml)</option>
+                    <option value="l">Liters (l)</option>
+                    <option value="m3">Cubic meters (m³)</option>
+                    <option value="tsp">Teaspoons (tsp)</option>
+                    <option value="tbsp">Tablespoons (tbsp)</option>
+                    <option value="floz">Fluid ounces (fl oz)</option>
+                    <option value="cup">Cups (cup)</option>
+                    <option value="pt">Pints (pt)</option>
+                    <option value="qt">Quarts (qt)</option>
+                    <option value="gal">Gallons (gal)</option>
+                </select>
+            </div>
+            <div class="converter-output">
+                <div class="converter-result">
+                    <span class="result-value">0</span>
+                    <span class="result-unit">l</span>
+                </div>
+                <select class="converter-target">
+                    <option value="ml">Milliliters (ml)</option>
+                    <option value="l" selected>Liters (l)</option>
+                    <option value="m3">Cubic meters (m³)</option>
+                    <option value="tsp">Teaspoons (tsp)</option>
+                    <option value="tbsp">Tablespoons (tbsp)</option>
+                    <option value="floz">Fluid ounces (fl oz)</option>
+                    <option value="cup">Cups (cup)</option>
+                    <option value="pt">Pints (pt)</option>
+                    <option value="qt">Quarts (qt)</option>
+                    <option value="gal">Gallons (gal)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Weight Converter -->
+        <div class="converter-content" data-type="weight">
+            <div class="converter-input">
+                <input type="number" class="converter-value" placeholder="Enter value">
+                <select class="converter-unit">
+                    <option value="mg">Milligrams (mg)</option>
+                    <option value="g">Grams (g)</option>
+                    <option value="kg">Kilograms (kg)</option>
+                    <option value="t">Metric tons (t)</option>
+                    <option value="oz">Ounces (oz)</option>
+                    <option value="lb">Pounds (lb)</option>
+                    <option value="st">Stones (st)</option>
+                </select>
+            </div>
+            <div class="converter-output">
+                <div class="converter-result">
+                    <span class="result-value">0</span>
+                    <span class="result-unit">g</span>
+                </div>
+                <select class="converter-target">
+                    <option value="mg">Milligrams (mg)</option>
+                    <option value="g" selected>Grams (g)</option>
+                    <option value="kg">Kilograms (kg)</option>
+                    <option value="t">Metric tons (t)</option>
+                    <option value="oz">Ounces (oz)</option>
+                    <option value="lb">Pounds (lb)</option>
+                    <option value="st">Stones (st)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Temperature Converter -->
+        <div class="converter-content" data-type="temperature">
+            <div class="converter-input">
+                <input type="number" class="converter-value" placeholder="Enter value">
+                <select class="converter-unit">
+                    <option value="c">Celsius (°C)</option>
+                    <option value="f">Fahrenheit (°F)</option>
+                    <option value="k">Kelvin (K)</option>
+                </select>
+            </div>
+            <div class="converter-output">
+                <div class="converter-result">
+                    <span class="result-value">32</span>
+                    <span class="result-unit">°F</span>
+                </div>
+                <select class="converter-target">
+                    <option value="c">Celsius (°C)</option>
+                    <option value="f" selected>Fahrenheit (°F)</option>
+                    <option value="k">Kelvin (K)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Area Converter -->
+        <div class="converter-content" data-type="area">
+            <div class="converter-input">
+                <input type="number" class="converter-value" placeholder="Enter value">
+                <select class="converter-unit">
+                    <option value="mm2">Square mm (mm²)</option>
+                    <option value="cm2">Square cm (cm²)</option>
+                    <option value="m2">Square meters (m²)</option>
+                    <option value="ha">Hectares (ha)</option>
+                    <option value="km2">Square km (km²)</option>
+                    <option value="in2">Square inches (in²)</option>
+                    <option value="ft2">Square feet (ft²)</option>
+                    <option value="yd2">Square yards (yd²)</option>
+                    <option value="ac">Acres (ac)</option>
+                    <option value="mi2">Square miles (mi²)</option>
+                </select>
+            </div>
+            <div class="converter-output">
+                <div class="converter-result">
+                    <span class="result-value">0</span>
+                    <span class="result-unit">m²</span>
+                </div>
+                <select class="converter-target">
+                    <option value="mm2">Square mm (mm²)</option>
+                    <option value="cm2">Square cm (cm²)</option>
+                    <option value="m2" selected>Square meters (m²)</option>
+                    <option value="ha">Hectares (ha)</option>
+                    <option value="km2">Square km (km²)</option>
+                    <option value="in2">Square inches (in²)</option>
+                    <option value="ft2">Square feet (ft²)</option>
+                    <option value="yd2">Square yards (yd²)</option>
+                    <option value="ac">Acres (ac)</option>
+                    <option value="mi2">Square miles (mi²)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+            <!-- Expense Tracker Section -->
+            <!-- Expense Tracker Section -->
+            <section class="tool-content" id="expenses" role="tabpanel" aria-labelledby="expenses-tab" hidden>
+                <div class="expense-container">
+                    <div class="expense-header">
+                        <h2><i class="fas fa-rupee-sign"></i> Expense Tracker</h2>
+                        <div class="expense-period">
+                            <select id="expense-period">
+                                <option value="day">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="year">This Year</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="expense-summary">
+                        <div class="summary-card income">
+                            <div class="summary-label">Income</div>
+                            <div class="summary-amount" id="income-amount">₹0</div>
+                        </div>
+                        <div class="summary-card expense">
+                            <div class="summary-label">Expenses</div>
+                            <div class="summary-amount" id="expense-amount">₹0</div>
+                        </div>
+                        <div class="summary-card balance">
+                            <div class="summary-label">Balance</div>
+                            <div class="summary-amount" id="balance-amount">₹0</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-chart-container">
+                        <canvas id="expense-chart"></canvas>
+                    </div>
+
+                    <div class="expense-add-container">
+                        <button class="add-expense-btn" id="add-expense-btn">
+                            <i class="fas fa-plus"></i> Add Transaction
+                        </button>
+                    </div>
+
+                    <div class="expense-list-container">
+                        <div class="expense-list-header">
+                            <h3>Recent Transactions</h3>
+                            <div class="expense-filter">
+                                <select id="expense-category-filter">
+                                    <option value="all">All Categories</option>
+                                    <option value="food">Food</option>
+                                    <option value="transport">Transport</option>
+                                    <option value="shopping">Shopping</option>
+                                    <option value="bills">Bills</option>
+                                    <option value="entertainment">Entertainment</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <ul class="expense-list" id="expense-list">
+                            <li class="expense-item empty-state">No transactions yet</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Expense Modal (Hidden by default) -->
+                <div class="modal" id="expense-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Add Transaction</h3>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="expense-form">
+                                <div class="form-group">
+                                    <label for="transaction-type">Transaction Type</label>
+                                    <div class="type-options">
+                                        <input type="radio" name="transaction-type" id="type-expense" value="expense"
+                                            checked>
+                                        <label for="type-expense">Expense</label>
+
+                                        <input type="radio" name="transaction-type" id="type-income" value="income">
+                                        <label for="type-income">Income</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transaction-amount">Amount (₹)</label>
+                                    <input type="number" id="transaction-amount" min="0" step="0.01" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transaction-title">Title</label>
+                                    <input type="text" id="transaction-title" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="transaction-date">Date</label>
+                                        <input type="date" id="transaction-date" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="transaction-category">Category</label>
+                                        <select id="transaction-category">
+                                            <option value="food">Food</option>
+                                            <option value="transport">Transport</option>
+                                            <option value="shopping">Shopping</option>
+                                            <option value="bills">Bills</option>
+                                            <option value="entertainment">Entertainment</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="transaction-notes">Notes (Optional)</label>
+                                    <textarea id="transaction-notes" rows="2"></textarea>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="cancel-btn">Cancel</button>
+                                    <button type="submit" class="save-btn">Save Transaction</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notes Section -->
+            <section class="tool-content" id="notes" role="tabpanel" aria-labelledby="notes-tab" hidden>
+                <div class="notes-container">
+                    <div class="notes-header">
+                        <h2><i class="fas fa-sticky-note"></i> Notes</h2>
+                        <div class="notes-search">
+                            <input type="text" id="notes-search" placeholder="Search notes...">
+                            <button id="search-notes"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="notes-content">
+                        <div class="notes-sidebar">
+                            <button class="add-note-btn" id="add-note-btn">
+                                <i class="fas fa-plus"></i> New Note
+                            </button>
+
+                            <div class="notes-list" id="notes-list">
+                                <div class="note-preview empty-state">No notes yet</div>
+                            </div>
+                        </div>
+
+                        <div class="notes-editor" id="notes-editor">
+                            <div class="editor-empty-state">
+                                <i class="fas fa-edit"></i>
+                                <p>Select a note or create a new one</p>
+                            </div>
+
+                            <div class="editor-content" id="editor-content" style="display: none;">
+                                <input type="text" id="note-title" placeholder="Note Title">
+                                <textarea id="note-body" placeholder="Start writing here..."></textarea>
+
+                                <div class="editor-actions">
+                                    <button class="delete-note" id="delete-note">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                    <button class="save-note" id="save-note">
+                                        <i class="fas fa-save"></i> Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Weather Forecast Section -->
+            <!-- Advanced Weather Forecast Section -->
+            <section class="tool-content" id="weather" role="tabpanel" aria-labelledby="weather-tab" hidden>
+                <div class="weather-container">
+                    <!-- Header with location and refresh -->
+                    <div class="weather-header">
+                        <div class="weather-title">
+                            <i class="fas fa-cloud-sun weather-main-icon"></i>
+                            <h2>Weather Forecast</h2>
+                            <button id="refresh-weather" aria-label="Refresh weather data">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+
+                        <div class="weather-controls">
+                            <div class="weather-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <select id="weather-location" class="styled-select">
+                                    <option value="Ghaziabad" selected>Ghaziabad</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Bangalore">Bangalore</option>
+                                    <option value="Lucknow">Lucknow</option>
+                                    <option value="Custom">Custom Location...</option>
+                                </select>
+                            </div>
+                            <div class="unit-toggle">
+                                <button class="unit-btn active" data-unit="celsius">°C</button>
+                                <button class="unit-btn" data-unit="fahrenheit">°F</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Weather Card with more details -->
+                    <div class="weather-summary-card animated-card">
+                        <div class="weather-current">
+                            <div class="weather-main">
+                                <div class="weather-icon-large" id="weather-icon">
+                                    <i class="fas fa-cloud-sun"></i>
+                                </div>
+                                <div class="temperature-display">
+                                    <span id="weather-temp">--</span>
+                                    <span class="unit">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="weather-details">
+                                <h3 id="weather-summary">Loading weather...</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <i class="fas fa-temperature-high"></i>
+                                        <span id="feels-like">Feels like: --°</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-wind"></i>
+                                        <span id="wind-speed">Wind: -- km/h</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-tint"></i>
+                                        <span id="humidity">Humidity: --%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span id="visibility">Visibility: -- km</span>
+                                    </div>
+                                </div>
+
+                                <div class="smart-suggestion-container">
+                                    <div class="suggestion-icon">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <p id="smart-suggestion" class="smart-suggestion">Fetching weather suggestions...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="weather-extras">
+                            <div class="sun-times">
+                                <div class="sun-time">
+                                    <i class="fas fa-sunrise"></i>
+                                    <span id="sunrise">--:-- AM</span>
+                                </div>
+                                <div class="sun-time">
+                                    <i class="fas fa-sunset"></i>
+                                    <span id="sunset">--:-- PM</span>
+                                </div>
+                            </div>
+                            <div class="uv-index">
+                                <span>UV Index</span>
+                                <div class="uv-meter">
+                                    <div class="uv-level" id="uv-level"></div>
+                                    <span id="uv-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hourly Forecast with Scroll -->
+                    <div class="weather-hourly-forecast">
+                        <h3>Hourly Forecast <small>Next 24 hours</small></h3>
+                        <div class="hourly-scroll-container">
+                            <div class="hourly-forecast-scroll" id="hourly-forecast">
+                                <!-- Hourly items will be inserted here -->
+                                <div class="hourly-item placeholder">
+                                    <div class="hour">--:--</div>
+                                    <div class="hour-icon"><i class="fas fa-cloud"></i></div>
+                                    <div class="hour-temp">--°</div>
+                                </div>
+                                <!-- More placeholders or actual data -->
+                            </div>
+                            <button class="scroll-button left" aria-label="Scroll left"><i
+                                    class="fas fa-chevron-left"></i></button>
+                            <button class="scroll-button right" aria-label="Scroll right"><i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- 5-Day Forecast -->
+                    <div class="weather-forecast">
+                        <h3>5-Day Forecast</h3>
+                        <div class="forecast-grid" id="forecast-grid">
+                            <!-- Forecast cards will be dynamically inserted -->
+                            <div class="forecast-card placeholder">
+                                <div class="forecast-day">---</div>
+                                <div class="forecast-icon"><i class="fas fa-cloud"></i></div>
+                                <div class="forecast-temps">
+                                    <span class="forecast-high">--°</span>
+                                    <span class="forecast-low">--°</span>
+                                </div>
+                            </div>
+                            <!-- More placeholders or actual data -->
+                        </div>
+                    </div>
+
+                    <!-- Advanced Weather Insights -->
+                    <div class="weather-insights">
+                        <h3>Weather Insights</h3>
+                        <div class="insights-grid">
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-thermometer-full"></i></div>
+                                <div class="insight-value" id="high-temp">--°</div>
+                                <div class="insight-label">Today's High</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-thermometer-empty"></i></div>
+                                <div class="insight-value" id="low-temp">--°</div>
+                                <div class="insight-label">Today's Low</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-cloud-rain"></i></div>
+                                <div class="insight-value" id="precipitation">--%</div>
+                                <div class="insight-label">Precipitation</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-wind"></i></div>
+                                <div class="insight-value" id="wind-gust">-- km/h</div>
+                                <div class="insight-label">Wind Gust</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="insight-value" id="pressure">-- hPa</div>
+                                <div class="insight-label">Pressure</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-icon"><i class="fas fa-water"></i></div>
+                                <div class="insight-value" id="dew-point">--°</div>
+                                <div class="insight-label">Dew Point</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Air Quality Index -->
+                    <div class="air-quality-card">
+                        <h3>Air Quality Index <span id="aqi-value">--</span></h3>
+                        <div class="aqi-meter">
+                            <div class="aqi-bar" id="aqi-bar"></div>
+                            <div class="aqi-labels">
+                                <span>Good</span>
+                                <span>Moderate</span>
+                                <span>Unhealthy</span>
+                                <span>Very Unhealthy</span>
+                                <span>Hazardous</span>
+                            </div>
+                        </div>
+                        <p id="aqi-message">Air quality data loading...</p>
+                    </div>
+
+                    <!-- Weather Map Link -->
+                    <div class="weather-map-link">
+                        <button id="view-weather-map">
+                            <i class="fas fa-map"></i> View Interactive Weather Map
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Game Section -->
+            <!-- Quiz Game Section -->
+            <section class="tool-content" id="quiz" role="tabpanel" aria-labelledby="quiz-tab" hidden>
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <h2><i class="fas fa-question-circle"></i> Quiz Challenge</h2>
+                        <div class="quiz-stats">
+                            <span id="current-question">1/100</span>
+                            <span id="score">Score: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="quiz-categories">
+                        <h3>Select Category:</h3>
+                        <div class="category-buttons">
+                            <button class="category-btn active" data-category="all">All</button>
+                            <button class="category-btn" data-category="general">General Knowledge</button>
+                            <button class="category-btn" data-category="science">Science</button>
+                            <button class="category-btn" data-category="history">History</button>
+                            <button class="category-btn" data-category="maths">Maths</button>
+                            <button class="category-btn" data-category="movies">Movies</button>
+                            <button class="category-btn" data-category="sports">Sports</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question-container">
+                        <div class="quiz-timer" id="quiz-timer">
+                            <div class="timer-progress" id="timer-progress"></div>
+                            <span id="time-left">30s</span>
+                        </div>
+
+                        <div class="question-box">
+                            <h3 id="question-text">Loading question...</h3>
+                        </div>
+
+                        <div class="options-container" id="options-container">
+                            <!-- Options will be inserted here by JavaScript -->
+                        </div>
+
+                        <div class="quiz-controls">
+                            <button id="prev-btn" disabled>Previous</button>
+                            <button id="next-btn">Next</button>
+                            <button id="submit-btn" style="display:none;">Submit Quiz</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-result" id="quiz-result" style="display:none;">
+                        <h3>Your Quiz Result</h3>
+                        <div class="result-details">
+                            <p>Total Questions: <span id="total-questions">0</span></p>
+                            <p>Correct Answers: <span id="correct-answers">0</span></p>
+                            <p>Wrong Answers: <span id="wrong-answers">0</span></p>
+                            <p>Score: <span id="final-score">0</span>%</p>
+                            <p>Time Taken: <span id="time-taken">0</span>s</p>
+                        </div>
+
+                        <div class="quiz-badges">
+                            <div class="badge" id="score-badge">
+                                <i class="fas fa-trophy"></i>
+                                <span>Score</span>
+                            </div>
+                            <div class="badge" id="time-badge">
+                                <i class="fas fa-stopwatch"></i>
+                                <span>Speed</span>
+                            </div>
+                            <div class="badge" id="streak-badge">
+                                <i class="fas fa-bolt"></i>
+                                <span>Streak</span>
+                            </div>
+                        </div>
+
+                        <button id="restart-quiz">Restart Quiz</button>
+                        <button id="new-quiz">New Quiz</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Music Section -->
+            <!-- Music Section -->
+            <section class="tool-content" id="music" role="tabpanel" aria-labelledby="music-tab" hidden>
+                <div class="music-container">
+                    <div class="music-header">
+                        <h2><i id="music-icon" class="fas fa-music"></i> Music Player</h2>
+                    </div>
+
+
+
+                    <!-- Scrollable Song List -->
+                    <div class="music-scroll-section">
+                        <ul class="song-list" id="song-list">
+                            <!-- Song items here -->
+                            <li class="song-item active">🎵 Lag Jaa Gale</li>
+                            <li class="song-item">🎵 Pal Pal Dil Ke Paas</li>
+                            <li class="song-item">🎵 ham tumhare hai</li>
+                            <li class="song-item">🎵 Yeh Dosti</li>
+                            <li class="song-item">🎵 rang barse</li>
+                            <li class="song-item">🎵 hanuman chalisha</li>
+                            <li class="song-item">🎵 Yeh Dosti 1</li>
+                            <li class="song-item">🎵 Yeh Dosti 2</li>
+                            <li class="song-item">🎵 Yeh Dosti 3</li>
+                            <li class="song-item">🎵 kajra re kajra re</li>
+                            <li class="song-item">🎵 tumse milne ko dil karta </li>
+                            <li class="song-item">🎵 ham tumhare hai </li>
+                            <li class="song-item">🎵 didi tera devar </li>
+                            <li class="song-item">🎵 dil chura liya</li>
+                            <li class="song-item">🎵 sundarkand</li>
+                            <li class="song-item">🎵 kabhi ram banke</li>
+                            <li class="song-item">🎵 dil jane jigar</li>
+                            <li class="song-item">🎵 jai ho tumhari</li>
+                            <li class="song-item">🎵 papa kahte hai</li>
+                        </ul>
+                    </div>
+
+
+                    <!-- Fixed Music Player -->
+        <div class="fixed-music-player">
+            <p id="now-playing">Now Playing: <strong>...</strong></p>
+            <audio id="audio" controls></audio>
+            <div class="music-controls">
+                <button class="music-btn" onclick="prevSong()">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="music-btn" onclick="playPause()">
+                    <i class="fas fa-play" id="play-pause-icon"></i>
+                </button>
+                <button class="music-btn" onclick="nextSong()">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+        </div>
+                </div>
+    </div>
+    </section>
+    </main>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="install-prompt">
+        <div class="prompt-content">
+            <p>Install Smart Assistant for better experience?</p>
+            <div class="prompt-actions">
+                <button id="install-cancel">Not Now</button>
+                <button id="install-confirm">Install</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading Smart Assistant...</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/todo.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/expenses.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/music.js"></script>
+    <script src="js/security.js"></script>
+</body>
+
+</html>
