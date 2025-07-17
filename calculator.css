@@ -1,0 +1,427 @@
+/* Calculator & Converter Section */
+.tool-content {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: var(--space-md);
+    background-color: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+}
+
+.tool-switcher {
+    display: flex;
+    margin-bottom: var(--space-md);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background-color: var(--light-gray);
+    box-shadow: var(--shadow-inset);
+}
+
+.tool-switch {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    color: var(--gray-color);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-align: center;
+    position: relative;
+}
+
+.tool-switch.active {
+    color: var(--primary-color);
+    background-color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.tool-switch:first-child {
+    border-top-left-radius: var(--radius-md);
+    border-bottom-left-radius: var(--radius-md);
+}
+
+.tool-switch:last-child {
+    border-top-right-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+}
+
+.tool-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tool-panel.active {
+    display: block;
+}
+
+/* Calculator Styles */
+.calculator-container {
+    max-width: 320px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.calculator-display {
+    padding: var(--space-md);
+    background-color: var(--dark-color);
+    color: white;
+    text-align: right;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.calculator-history {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    min-height: 20px;
+    word-break: break-all;
+}
+
+.calculator-current {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-top: var(--space-sm);
+    word-break: break-all;
+}
+
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background-color: var(--light-gray);
+}
+
+.calc-btn {
+    border: none;
+    padding: var(--space-lg) var(--space-md);
+    font-size: 1.2rem;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.calc-btn:active {
+    transform: scale(0.95);
+}
+
+.calc-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.calc-btn:focus:not(:active)::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+.calc-btn.number {
+    font-weight: 500;
+}
+
+.calc-btn.number.zero {
+    grid-column: span 2;
+}
+
+.calc-btn.function {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.calc-btn.operation, 
+.calc-btn.equals {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.4rem;
+}
+
+.calc-btn.operation.active {
+    background-color: var(--primary-dark);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Converter Styles */
+.converter-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.converter-tabs {
+    display: flex;
+    background-color: var(--light-gray);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.converter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.converter-tab {
+    flex: 1;
+    min-width: 100px;
+    padding: var(--space-sm);
+    border: none;
+    background: transparent;
+    font-weight: 500;
+    color: var(--gray-color);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+}
+
+.converter-tab.active {
+    color: var(--primary-color);
+    background-color: white;
+}
+
+.converter-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+.converter-content {
+    padding: var(--space-md);
+    display: none;
+}
+
+.converter-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.converter-input,
+.converter-output {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    gap: var(--space-sm);
+}
+
+.converter-value {
+    flex: 1;
+    padding: var(--space-sm);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    transition: var(--transition-fast);
+}
+
+.converter-value:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+}
+
+.converter-unit,
+.converter-target {
+    padding: var(--space-sm);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.converter-unit:focus,
+.converter-target:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.converter-result {
+    flex: 1;
+    padding: var(--space-sm);
+    background-color: var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    text-align: center;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-value {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.result-unit {
+    color: var(--gray-color);
+    margin-left: var(--space-xs);
+}
+
+/* Dark Mode Styles */
+.dark-mode .tool-content {
+    background-color: #252525;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .tool-switcher {
+    background-color: #333;
+}
+
+.dark-mode .tool-switch {
+    color: #b0b0b0;
+}
+
+.dark-mode .tool-switch.active {
+    color: var(--accent-color);
+    background-color: #252525;
+}
+
+.dark-mode .calculator-container,
+.dark-mode .converter-container {
+    background-color: #252525;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .calculator-display {
+    background-color: #1a1a1a;
+}
+
+.dark-mode .calculator-buttons {
+    background-color: #333;
+}
+
+.dark-mode .calc-btn {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.dark-mode .calc-btn.function {
+    color: var(--accent-color);
+    background-color: #252525;
+}
+
+.dark-mode .calc-btn.operation,
+.dark-mode .calc-btn.equals {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.dark-mode .converter-tabs {
+    background-color: #333;
+}
+
+.dark-mode .converter-tab {
+    color: #b0b0b0;
+}
+
+.dark-mode .converter-tab.active {
+    color: var(--accent-color);
+    background-color: #252525;
+}
+
+.dark-mode .converter-value,
+.dark-mode .converter-unit,
+.dark-mode .converter-target {
+    background-color: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+.dark-mode .converter-result {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.dark-mode .result-value {
+    color: var(--accent-color);
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .calculator-container {
+        max-width: 100%;
+    }
+    
+    .calc-btn {
+        padding: var(--space-md) var(--space-sm);
+    }
+    
+    .converter-tab {
+        min-width: 80px;
+        font-size: 0.85rem;
+        padding: var(--space-xs) var(--space-sm);
+    }
+    
+    .converter-input,
+    .converter-output {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .converter-unit,
+    .converter-target {
+        width: 100%;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
