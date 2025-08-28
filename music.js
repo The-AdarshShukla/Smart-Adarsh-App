@@ -7,8 +7,10 @@ function initMusicPlayer() {
     const nextBtn = document.getElementById("next-btn");
     const prevBtn = document.getElementById("prev-btn");
 
+
+
     const songs = [
-        { title: "Lag Jaa Gale", file: "music/song1.mp3" },
+        { title: "dosti", file: "Yeh Dosti Hum Nahin Sad Version Sholay 128 Kbps.mp3" },
         { title: "Pal Pal Dil Ke Paas", file: "music/song2.mp3" },
         { title: "ham tumhare hai", file: "Hum Tumhare Hain Sanaam.mp3" },
         { title: "Yeh Dosti", file: "music/song3.mp3" },
@@ -183,4 +185,5 @@ function initMusicPlayer() {
     window.prevSong = prevSong;
 
     init();
+
 }
